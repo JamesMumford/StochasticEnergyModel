@@ -1,16 +1,35 @@
 #include "OrnsteinUhlenbeck.hpp"
 #include "EulerMaruyama.hpp"
+#include "GeometricBrownianMotion.hpp"
 #include <iostream>
 
 const int no_steps = 50;
+const int randomSeed = 77;
+const double resolution = 0.001;
 
 int main()
 {
-    OrnsteinUhlenbeck process(50,10,5);
-    EulerMaruyama solver(process,0.001,19);
-    vector<double> pathHistory = solver.simulatePathHistory(5,no_steps);
+    /*initialising sde processes*/
+    OrnsteinUhlenbeck OUprocess(50,10,5);
+    GeometricBrownianMotion GBMprocess(0,1);
+
+    StochasticProcess& OUref = OUprocess;
+    StochasticProcess& GBMref = GBMprocess;
+
+    /*initialising process solvers*/
+    EulerMaruyama OUsolver(OUref,resolution,randomSeed);
+    EulerMaruyama GBMsolver(GBMref,resolution,randomSeed);
+
+    /*path simulation*/
+    /*vector<double> OUpathHistory = OUsolver.simulatePathHistory(0,5,no_steps);
     for (int i = 0; i < no_steps; i++)
     {
-        std::cout << pathHistory.at(i) << "\n";
+        std::cout << OUpathHistory.at(i) << "\n";
+    }*/
+
+    vector<double> GBMpathHistory = GBMsolver.simulatePathHistory(0,100,no_steps);
+    for (int i = 0; i < no_steps; i++)
+    {
+        std::cout << GBMpathHistory.at(i) << "\n";
     }
 };

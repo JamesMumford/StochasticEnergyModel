@@ -4,7 +4,7 @@
 class Distribution
 {
     public:
-        virtual ~Distribution();
+        virtual ~Distribution() = default;
         virtual double sample();
     private:
 };

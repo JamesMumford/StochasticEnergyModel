@@ -1,13 +1,9 @@
 #include "OrnsteinUhlenbeck.hpp"
 
-OrnsteinUhlenbeck::OrnsteinUhlenbeck(double theta,double mu,double sigma) : theta_(theta), mu_(mu), sigma_(sigma){}
-
-double OrnsteinUhlenbeck::drift(double x_t) const
-{
-    return theta_ * (mu_ - x_t);
-};
-
-double OrnsteinUhlenbeck::diffusion(double x_t) const
-{
-    return sigma_;
-};
+OrnsteinUhlenbeck::OrnsteinUhlenbeck(double theta,double mu,double sigma) : StochasticProcess
+(
+    [theta,mu](double t, double x_t){return theta * (mu - x_t);},
+    [sigma](double,double){return sigma;},
+    zeroDirac,
+    infinityDirac
+){};

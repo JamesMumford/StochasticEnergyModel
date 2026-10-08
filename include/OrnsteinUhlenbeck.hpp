@@ -1,12 +1,11 @@
 #pragma once
+#include "StochasticProcess.hpp"
+#include "StandardDistributions.hpp"
 
-class OrnsteinUhlenbeck
+class OrnsteinUhlenbeck : public StochasticProcess
 {
     public:
         OrnsteinUhlenbeck(double theta, double mu, double sigma);
-
-        double drift(double x_t) const;
-        double diffusion(double x_t) const;
 
     private:
         double theta_;

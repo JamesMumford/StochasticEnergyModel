@@ -1,9 +1,14 @@
 #pragma once
+#include "StochasticProcess.hpp"
+#include "StandardDistributions.hpp"
 
-class GeometricBrownianMotion
+class GeometricBrownianMotion : public StochasticProcess
 {
     public:
-        GeomtricBrownianMotion(double mu, double sigma);
+        GeometricBrownianMotion(double mu, double sigma);
+
+        double drift(double x_t);
+        double diffusion(double x_t);
 
     private:
         double mu_;

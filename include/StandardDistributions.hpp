@@ -10,3 +10,6 @@ class DiracDelta : public Distribution
     private:
         double x_;
 };
+
+extern Distribution zeroDirac;
+extern Distribution infinityDirac;

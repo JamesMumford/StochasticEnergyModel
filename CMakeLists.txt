@@ -9,6 +9,12 @@ add_executable(stochastic_model
     src/main.cpp
     src/OrnsteinUhlenbeck.cpp
     src/EulerMaruyama.cpp
+    src/BrownianMotion.cpp
+    src/Distribution.cpp
+    src/GeometricBrownianMotion.cpp
+    src/StochasticProcess.cpp
+    src/StandardDistributions.cpp
+
 )
 
 target_include_directories(stochastic_model PRIVATE include)
