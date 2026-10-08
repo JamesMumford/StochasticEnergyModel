@@ -4,7 +4,7 @@ OrnsteinUhlenbeck::OrnsteinUhlenbeck(double theta,double mu,double sigma) : thet
 
 double OrnsteinUhlenbeck::drift(double x_t) const
 {
-    return -theta_ * (x_t - mu_);
+    return theta_ * (mu_ - x_t);
 };
 
 double OrnsteinUhlenbeck::diffusion(double x_t) const
