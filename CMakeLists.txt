@@ -15,6 +15,9 @@ add_executable(stochastic_model
     src/StochasticProcess.cpp
     src/StandardDistributions.cpp
     src/Solver.cpp
+    src/PureJumpProcess.cpp
+    
+
 
 )
 

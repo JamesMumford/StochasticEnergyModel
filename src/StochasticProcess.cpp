@@ -1,19 +1,12 @@
 #include "StochasticProcess.hpp"
 #include <iostream>
 
-StochasticProcess::StochasticProcess(BiVariateFunction driftFunction, BiVariateFunction diffusionFunction, Distribution& jumpWaitingDistribution, Distribution& jumpSizeDistribution)
+StochasticProcess::StochasticProcess(BivariateFunction driftFunction, BivariateFunction diffusionFunction, Distribution& jumpWaitingDistribution, Distribution& jumpSizeDistribution)
 : driftFunction_(driftFunction), diffusionFunction_(diffusionFunction), jumpWaitingDistribution_(jumpWaitingDistribution), jumpSizeDistribution_(jumpSizeDistribution), nextJumpTime(0){};
 
 double StochasticProcess::getDrift(double t, double x_t)
 {
-    std::cerr << "Before drift call: t=" << t
-              << ", x_t=" << x_t << '\n';
-
-    double result = driftFunction_(t, x_t);
-
-    std::cerr << "After drift call: result=" << result << '\n';
-
-    return result;
+    return driftFunction_(t, x_t);
 }
 
 double StochasticProcess::getDiffusion(double t, double x_t)
@@ -38,5 +31,15 @@ double StochasticProcess::getJump(double t_prev, double t_new, std::mt19937& gen
 void StochasticProcess::setJumpWait(std::mt19937& generator)
 {
     nextJumpTime = jumpWaitingDistribution_.sample(generator);
+}
+
+std::function<double(double,double)> StochasticProcess::getDriftFunction()
+{
+    return driftFunction_;
+}
+
+std::function<double(double,double)> StochasticProcess::getDiffusionFunction()
+{
+    return diffusionFunction_;
 }
 
