@@ -14,6 +14,7 @@ add_executable(stochastic_model
     src/GeometricBrownianMotion.cpp
     src/StochasticProcess.cpp
     src/StandardDistributions.cpp
+    src/Solver.cpp
 
 )
 

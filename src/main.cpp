@@ -3,9 +3,13 @@
 #include "GeometricBrownianMotion.hpp"
 #include <iostream>
 
+#include "StandardDistributions.hpp"
+#include <random>
+#include <limits>
+
 const int no_steps = 50;
 const int randomSeed = 77;
-const double resolution = 0.001;
+const double resolution = 0.0001;
 
 int main()
 {
@@ -27,9 +31,11 @@ int main()
         std::cout << OUpathHistory.at(i) << "\n";
     }*/
 
-    vector<double> GBMpathHistory = GBMsolver.simulatePathHistory(0,100,no_steps);
+    
+    std::vector<double> GBMpathHistory = GBMsolver.simulatePathHistory(0,100,no_steps);
     for (int i = 0; i < no_steps; i++)
     {
         std::cout << GBMpathHistory.at(i) << "\n";
     }
+
 };

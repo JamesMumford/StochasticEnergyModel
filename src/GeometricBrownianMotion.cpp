@@ -4,6 +4,6 @@ GeometricBrownianMotion::GeometricBrownianMotion(double mu, double sigma): Stoch
 (
     [mu](double t, double x_t){return mu * x_t;},
     [sigma](double t,double x_t){return sigma * x_t;},
-    zeroDirac,
-    infinityDirac
+    StandardDistributions::infinityDirac,
+    StandardDistributions::zeroDirac
  ){};
