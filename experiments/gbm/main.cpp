@@ -1,10 +1,7 @@
 #include "EulerMaruyama.hpp"
 #include "GeometricBrownianMotion.hpp"
 #include <iostream>
-
 #include "StandardDistributions.hpp"
-#include <random>
-#include <limits>
 
 /* Simulation parameters */
 const int noSteps = 5000;

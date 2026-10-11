@@ -13,6 +13,7 @@ class StochasticProcess
         double getDiffusion(double t, double x_t);
         double getJump(double t_prev, double t_new, std::mt19937& generator);
         void setJumpWait(std::mt19937& generator);
+        double getNextJumpTime();
         std::function<double(double,double)> getDriftFunction();
         std::function<double(double,double)> getDiffusionFunction();
     private:
@@ -20,5 +21,5 @@ class StochasticProcess
         BivariateFunction diffusionFunction_;
         Distribution& jumpWaitingDistribution_;
         Distribution& jumpSizeDistribution_;
-        double nextJumpTime;
+        double nextJumpTime_;
 };

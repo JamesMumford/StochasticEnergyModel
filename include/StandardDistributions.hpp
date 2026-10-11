@@ -17,7 +17,6 @@ class Exponential : public Distribution
         Exponential(double lambda);
         double sample(std::mt19937& generator) override;
     private:
-        double lambda_;
         std::exponential_distribution<double> distribution_;
 };
 
@@ -27,9 +26,17 @@ class Normal : public Distribution
         Normal(double mu, double sigma);
         double sample(std::mt19937& generator) override;
     private:
-        double mu_;
-        double sigma_;
         std::normal_distribution<double> distribution_;
+};
+
+class AbsoluteNormal : public Distribution
+{
+    public:
+        AbsoluteNormal(double mu, double sigma);
+        double sample(std::mt19937& generator) override;
+    private:
+        std::normal_distribution<double> distribution_;
+
 };
 
 namespace StandardDistributions

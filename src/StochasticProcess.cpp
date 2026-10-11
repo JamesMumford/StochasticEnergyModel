@@ -2,7 +2,8 @@
 #include <iostream>
 
 StochasticProcess::StochasticProcess(BivariateFunction driftFunction, BivariateFunction diffusionFunction, Distribution& jumpWaitingDistribution, Distribution& jumpSizeDistribution)
-: driftFunction_(driftFunction), diffusionFunction_(diffusionFunction), jumpWaitingDistribution_(jumpWaitingDistribution), jumpSizeDistribution_(jumpSizeDistribution), nextJumpTime(0){};
+: driftFunction_(driftFunction), diffusionFunction_(diffusionFunction), jumpWaitingDistribution_(jumpWaitingDistribution), jumpSizeDistribution_(jumpSizeDistribution), nextJumpTime_(0){};
+
 
 double StochasticProcess::getDrift(double t, double x_t)
 {
@@ -17,12 +18,10 @@ double StochasticProcess::getDiffusion(double t, double x_t)
 double StochasticProcess::getJump(double t_prev, double t_new, std::mt19937& generator)
 {
     double jumpSize = 0;
-    while (t_new > nextJumpTime)
+    while (t_new > nextJumpTime_)
     {
-        std::cout << jumpWaitingDistribution_.sample(generator) << "\n";
         double sampleIncrease = jumpWaitingDistribution_.sample(generator);
-        nextJumpTime += sampleIncrease;
-        std::cout << nextJumpTime << "added: " << sampleIncrease << " \n";
+        nextJumpTime_ += sampleIncrease;
         jumpSize += jumpSizeDistribution_.sample(generator);
     }
     return jumpSize;
@@ -30,7 +29,12 @@ double StochasticProcess::getJump(double t_prev, double t_new, std::mt19937& gen
 
 void StochasticProcess::setJumpWait(std::mt19937& generator)
 {
-    nextJumpTime = jumpWaitingDistribution_.sample(generator);
+    nextJumpTime_ = jumpWaitingDistribution_.sample(generator);
+}
+
+double StochasticProcess::getNextJumpTime()
+{
+    return nextJumpTime_;
 }
 
 std::function<double(double,double)> StochasticProcess::getDriftFunction()
