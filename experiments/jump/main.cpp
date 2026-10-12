@@ -4,31 +4,53 @@
 #include "Distribution.hpp"
 #include <iostream>
 #include <random>
+#include <fstream>
 
 double predictJumpEV(StochasticProcess&);
 
 /* Simulation parameters*/
-const int noSteps = 5;
-const int randomSeed = 770;
-const double resolution = 1;
+const int noSteps = 50;
+const unsigned int randomSeed = 770;
+const double resolution = 0.1;
 const int noSims = 100;
+const double T_0 = 0;
+const double X_T_0 = 100;
 
 /* Pure jump process parameters */
-const double JUMP_TIME_INTENSITY = 4.0;
-const double JUMP_SIZE_MU = 100;
+double INTENSITY_LAMBDA = 0.1;
+const double JUMP_SIZE_MU = 0;
 const double JUMP_SIZE_SIGMA = 25;
 const double X_0 = 0.0;
 
-Exponential expObj(JUMP_TIME_INTENSITY);
-Distribution& JUMP_TIME_DISTRIBUTION = expObj;
-AbsoluteNormal normObj(JUMP_SIZE_MU, JUMP_SIZE_SIGMA);
-Distribution& JUMP_SIZE_DISTRIBUTION = normObj;
-
 int main()
 {
-    PureJumpProcess jumpProcess(JUMP_TIME_DISTRIBUTION, JUMP_SIZE_DISTRIBUTION);
-    double jumpPrediction = predictJumpEV(jumpProcess);
-    std::cout << "Jump model predicted value: " << jumpPrediction << std::endl;
+    PureJumpProcess jumpProcess
+    (
+        [](double,double){return INTENSITY_LAMBDA;},
+         std::move(std::make_unique<Normal>(JUMP_SIZE_MU,JUMP_SIZE_SIGMA))
+    );
+
+    std::string filename;
+    std::cout << "\nStore results in file: ";
+    std::cin >> filename;
+
+    std::ofstream file("results/ou/"+filename + ".csv");
+
+    file << "FIXED JUMP INTENSITY = " << INTENSITY_LAMBDA << ", MEAN JUMP SIZE = " << JUMP_SIZE_MU << ", STDEV OF JUMP SIZE = " << JUMP_SIZE_SIGMA << ", T_0 =" << T_0 << ", X_T_0 = " << X_T_0 << ", DELTA T = " << resolution << "\n";
+    file << "RANDOM SEEDS: " + std::to_string(randomSeed) + " + i\n";
+    file << "NUMBER OF SIMS = " + std::to_string(noSims) + ", NUMBER OF STEPS PER SIM = " + std::to_string(noSteps) + "\n";
+
+    for (int i = 0; i < noSims; i++)
+    {
+        EulerMaruyama jumpSolver(jumpProcess,resolution,randomSeed + i);
+        std::vector<double> results = jumpSolver.simulatePathHistory(T_0, X_T_0, noSteps);
+        for (double num : results)
+        {
+            file << num << ", ";
+        }
+        file << "\n";
+    }
+
 
 
 

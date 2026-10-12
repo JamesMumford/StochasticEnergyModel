@@ -1,8 +1,8 @@
 #include "StochasticProcess.hpp"
 #include <iostream>
 
-StochasticProcess::StochasticProcess(BivariateFunction driftFunction, BivariateFunction diffusionFunction, Distribution& jumpWaitingDistribution, Distribution& jumpSizeDistribution)
-: driftFunction_(driftFunction), diffusionFunction_(diffusionFunction), jumpWaitingDistribution_(jumpWaitingDistribution), jumpSizeDistribution_(jumpSizeDistribution), nextJumpTime_(0){};
+StochasticProcess::StochasticProcess(BivariateFunction driftFunction, BivariateFunction diffusionFunction, BivariateFunction jumpIntensity, std::unique_ptr<Distribution> jumpSizeDistribution)
+: driftFunction_(driftFunction), diffusionFunction_(diffusionFunction), jumpIntensity_(jumpIntensity), jumpSizeDistribution_(std::move(jumpSizeDistribution)){};
 
 
 double StochasticProcess::getDrift(double t, double x_t)
@@ -15,26 +15,18 @@ double StochasticProcess::getDiffusion(double t, double x_t)
     return diffusionFunction_(t, x_t);
 }
 
-double StochasticProcess::getJump(double t_prev, double t_new, std::mt19937& generator)
+double StochasticProcess::getJump(double t_prev, double t_new, double x_t_prev, std::mt19937& generator)
 {
-    double jumpSize = 0;
-    while (t_new > nextJumpTime_)
+    double jumpSum = 0.0;
+    double poissonCoefficient = (t_new - t_prev) * jumpIntensity_(t_prev, x_t_prev);
+    jumpCountDistribution_.param(std::poisson_distribution<int>::param_type(poissonCoefficient));
+    int jumpCount = jumpCountDistribution_(generator);
+
+    for (int i = 0; i < jumpCount; i++)
     {
-        double sampleIncrease = jumpWaitingDistribution_.sample(generator);
-        nextJumpTime_ += sampleIncrease;
-        jumpSize += jumpSizeDistribution_.sample(generator);
+        jumpSum += (*jumpSizeDistribution_).sample(generator);
     }
-    return jumpSize;
-}
-
-void StochasticProcess::setJumpWait(std::mt19937& generator)
-{
-    nextJumpTime_ = jumpWaitingDistribution_.sample(generator);
-}
-
-double StochasticProcess::getNextJumpTime()
-{
-    return nextJumpTime_;
+    return jumpSum;
 }
 
 std::function<double(double,double)> StochasticProcess::getDriftFunction()
@@ -45,5 +37,15 @@ std::function<double(double,double)> StochasticProcess::getDriftFunction()
 std::function<double(double,double)> StochasticProcess::getDiffusionFunction()
 {
     return diffusionFunction_;
+}
+
+std::function<double(double,double)> StochasticProcess::getJumpIntensityFunction()
+{
+    return jumpIntensity_;
+}
+
+Distribution& StochasticProcess::getJumpSizeDistribution()
+{
+    return *jumpSizeDistribution_;
 }
 

@@ -1,9 +1,9 @@
 #include "PureJumpProcess.hpp"
 
-PureJumpProcess::PureJumpProcess(Distribution& jumpWaitingDistribution, Distribution& jumpSizeDistribution) : StochasticProcess
+PureJumpProcess::PureJumpProcess(BivariateFunction jumpIntensity, std::unique_ptr<Distribution> jumpSizeDistribution) : StochasticProcess
 (
     [](double,double){return 0;},
     [](double,double){return 0;},
-    jumpWaitingDistribution,
-    jumpSizeDistribution
+    jumpIntensity,
+    std::move(jumpSizeDistribution)
 ){};

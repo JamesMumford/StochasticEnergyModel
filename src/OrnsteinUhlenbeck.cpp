@@ -4,6 +4,6 @@ OrnsteinUhlenbeck::OrnsteinUhlenbeck(double theta,double mu,double sigma) : Stoc
 (
     [theta,mu](double t, double x_t){return theta * (mu - x_t);},
     [sigma](double,double){return sigma;},
-    StandardDistributions::infinityDirac,
-    StandardDistributions::zeroDirac
+    [](double,double){return 0;},
+    std::make_unique<DiracDelta>(0)
 ){};

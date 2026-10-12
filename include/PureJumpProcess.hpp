@@ -5,5 +5,5 @@
 class PureJumpProcess : public StochasticProcess
 {
     public:
-        PureJumpProcess(Distribution& jumpWaitingDistribution, Distribution& jumpSizeDistribution);
+        PureJumpProcess(BivariateFunction jumpIntensity, std::unique_ptr<Distribution> jumpSizeDistribution);
 };

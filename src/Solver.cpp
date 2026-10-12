@@ -1,10 +1,7 @@
 #include "Solver.hpp"
 #include <iostream>
 
-Solver::Solver(StochasticProcess& process, double dt, unsigned int seed) : process_(process), dt_(dt), generator_(seed), standardNormalDist_(0,1)
-{
-    process.setJumpWait(generator_);
-};
+Solver::Solver(StochasticProcess& process, double dt, unsigned int seed) : process_(process), dt_(dt), generator_(seed), standardNormalDist_(0,1){};
 
 /* Euler-Murayama stepping implementation for now, generalise later*/
 double Solver::step(double t, double x_t)
