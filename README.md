@@ -24,4 +24,6 @@ for pricing an option on the underlying.
       might be more likely to experience negative ones)
     - Mean reversion of continuous component and mean reversion of jump component to be modelled separately (jumps often experience very sharp mean reversion, so it may be
       beneficial if they are not subject to the same reversion rate as continuous deviations from the baseline)
+- Introduce some independent market variables (seasonality, weather conditions, economic conditions etc) which also affect the process' drift, diffusion, jump intensity and
+  jump size distribution
 
