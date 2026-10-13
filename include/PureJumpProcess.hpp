@@ -6,4 +6,5 @@ class PureJumpProcess : public StochasticProcess
 {
     public:
         PureJumpProcess(BivariateFunction jumpIntensity, std::unique_ptr<Distribution> jumpSizeDistribution);
+        std::string getStringParameters() override;
 };

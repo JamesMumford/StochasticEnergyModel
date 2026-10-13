@@ -9,6 +9,7 @@ class GeometricBrownianMotion : public StochasticProcess
 
         double drift(double x_t);
         double diffusion(double x_t);
+        std::string getStringParameters() override;
 
     private:
         double mu_;

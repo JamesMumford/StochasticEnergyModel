@@ -7,3 +7,8 @@ PureJumpProcess::PureJumpProcess(BivariateFunction jumpIntensity, std::unique_pt
     jumpIntensity,
     std::move(jumpSizeDistribution)
 ){};
+
+std::string PureJumpProcess::getStringParameters()
+{
+    return "Pure jump process: Pass to child method for more detail";
+}

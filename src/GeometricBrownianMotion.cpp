@@ -6,4 +6,13 @@ GeometricBrownianMotion::GeometricBrownianMotion(double mu, double sigma): Stoch
     [sigma](double t,double x_t){return sigma * x_t;},
     [](double,double){return 0;},
     std::make_unique<DiracDelta>(0)
- ){};
+ )
+ {
+    mu_ = mu;
+    sigma_ = sigma;
+ };
+
+ std::string GeometricBrownianMotion::getStringParameters()
+ {
+    return "GBM: MU = " + std::to_string(mu_) + ", SIGMA = " + std::to_string(sigma_) + "\n";
+ }

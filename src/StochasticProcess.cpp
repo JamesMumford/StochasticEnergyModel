@@ -49,3 +49,8 @@ Distribution& StochasticProcess::getJumpSizeDistribution()
     return *jumpSizeDistribution_;
 }
 
+std::string getStringParameters()
+{
+    return "";
+}
+

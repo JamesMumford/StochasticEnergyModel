@@ -7,7 +7,7 @@
 const int noSteps = 5000;
 const int randomSeed = 77;
 const double resolution = 0.001;
-const int noSims = 10000;
+const int noSims = 1000;
 
 /* Geometric Brownian motion process parameters */
 const double MU = 5.6;

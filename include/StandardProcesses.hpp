@@ -7,4 +7,5 @@ class PoissonProcess : public PureJumpProcess
 {
     public:
         PoissonProcess(double intensity, double scale);
+        std::string getStringParameters() override;
 };

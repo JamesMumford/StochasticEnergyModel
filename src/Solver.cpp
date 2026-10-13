@@ -1,9 +1,7 @@
 #include "Solver.hpp"
-#include <iostream>
 
-Solver::Solver(StochasticProcess& process, double dt, unsigned int seed) : process_(process), dt_(dt), generator_(seed), standardNormalDist_(0,1){};
+Solver::Solver(StochasticProcess& process, double dt, unsigned int seed) : process_(process), dt_(dt), generator_(seed), standardNormalDist_(0,1), seed_(seed){};
 
-/* Euler-Murayama stepping implementation for now, generalise later*/
 double Solver::step(double t, double x_t)
 {
     return 0;
@@ -28,4 +26,21 @@ std::vector<double> Solver::simulatePathHistory(double t_0, double x_t_0, const 
         stateHistory.at(i+1) = step(t_0 + i * dt_, stateHistory.at(i));
     }
     return stateHistory;
+}
+
+void Solver::simulateAndWritePathHistory(std::string filename, double t_0, double x_t_0, const unsigned int no_steps)
+{
+    std::vector<double> results = simulatePathHistory(t_0, x_t_0, no_steps);
+    std::ofstream file(filename,std::ios::app);
+
+    for (double entry : results)
+    {
+        file << std::to_string(entry) + ", ";
+    }
+    file << "\n";
+}
+
+double Solver::getDt()
+{
+    return dt_;
 }

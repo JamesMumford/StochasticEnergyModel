@@ -19,35 +19,44 @@ const double T_0 = 0.0;
 const double X_T_0 = 100;
 
 double predictOUEV(StochasticProcess&);
+void writeSimulation(StochasticProcess&);
 
 int main()
 {
     OrnsteinUhlenbeck OUprocess(THETA,MU,SIGMA);
     StochasticProcess& OUref = OUprocess;
 
+    writeSimulation(OUref);
+}
+
+void comparePredictedToAnalyticOUEV(StochasticProcess& OUref)
+{
+    std::string filename;
+    std::cout << "\nRead data from file: ";
+    std::cin >> filename;
+
+    std::ofstream file("results/ou/"+filename+".csv");
+
+
+}
+
+void writeSimulation(StochasticProcess& OUref)
+{
     std::string filename;
     std::cout << "\nStore results in file: ";
     std::cin >> filename;
 
-    std::ofstream file("results/ou/"+filename + ".csv");
+    filename = "results/ou/"+filename + ".csv";
 
-    file << "THETA = " + std::to_string(THETA) + ", MU = " + std::to_string(MU) + ", SIGMA = " + std::to_string(SIGMA) + ", T_0 = " + std::to_string(T_0) + ", X_T_0 = " + std::to_string(X_T_0) + ", DELTA T = " + std::to_string(resolution) + "\n";
-    file << "RANDOM SEEDS: " + std::to_string(randomSeed) + " + i\n";
-    file << "NUMBER OF SIMS = " + std::to_string(noSims) + ", NUMBER OF STEPS PER SIM = " + std::to_string(noSteps) + "\n";
-
-    std::vector<double> results;
+    EulerMaruyama OUsolver(OUref, resolution, randomSeed);
+    OUsolver.writeSimulationParams(filename, noSteps, noSims, T_0, X_T_0);
+    
     for (int i = 0; i < noSims; i++)
     {
         EulerMaruyama OUsolver(OUref, resolution, randomSeed + i);
-        results = OUsolver.simulatePathHistory(T_0,X_T_0,noSteps);
-        for (double val : results)
-        {
-            file << std::to_string(val) + ",";
-        }
-        file << "\n";
+        OUsolver.simulateAndWritePathHistory(filename, T_0, X_T_0, noSteps);
     }
 }
-
 
 double predictOUEV(StochasticProcess& OUref)
 {
