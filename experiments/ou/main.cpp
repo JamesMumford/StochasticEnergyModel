@@ -2,6 +2,7 @@
 #include "OrnsteinUhlenbeck.hpp"
 #include <iostream>
 #include "StandardDistributions.hpp"
+#include "UtilityFunctions.hpp"
 #include <string>
 #include <fstream>
 
@@ -19,14 +20,13 @@ const double T_0 = 0.0;
 const double X_T_0 = 100;
 
 double predictOUEV(StochasticProcess&);
-void writeSimulation(StochasticProcess&);
 
 int main()
 {
     OrnsteinUhlenbeck OUprocess(THETA,MU,SIGMA);
     StochasticProcess& OUref = OUprocess;
 
-    writeSimulation(OUref);
+    Utility::writeEulerMaruyamaSim(OUref,T_0,X_T_0,resolution,noSteps,noSims,randomSeed);
 }
 
 void comparePredictedToAnalyticOUEV(StochasticProcess& OUref)
@@ -35,26 +35,19 @@ void comparePredictedToAnalyticOUEV(StochasticProcess& OUref)
     std::cout << "\nRead data from file: ";
     std::cin >> filename;
 
-    std::ofstream file("results/ou/"+filename+".csv");
+    std::ifstream file("results/ou/"+filename+".csv");
 
-
-}
-
-void writeSimulation(StochasticProcess& OUref)
-{
-    std::string filename;
-    std::cout << "\nStore results in file: ";
-    std::cin >> filename;
-
-    filename = "results/ou/"+filename + ".csv";
-
-    EulerMaruyama OUsolver(OUref, resolution, randomSeed);
-    OUsolver.writeSimulationParams(filename, noSteps, noSims, T_0, X_T_0);
-    
-    for (int i = 0; i < noSims; i++)
+    if (!file.is_open())
     {
-        EulerMaruyama OUsolver(OUref, resolution, randomSeed + i);
-        OUsolver.simulateAndWritePathHistory(filename, T_0, X_T_0, noSteps);
+        std::cout << "Failed to open file!";
+        return;
+    }
+
+    std::string line;
+
+    for (int i = 0; i < 6; i++)
+    {
+        std::getline(file,line);
     }
 }
 

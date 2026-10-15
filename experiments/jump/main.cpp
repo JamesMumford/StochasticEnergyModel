@@ -2,6 +2,8 @@
 #include "PureJumpProcess.hpp"
 #include "StandardDistributions.hpp"
 #include "Distribution.hpp"
+#include "StandardProcesses.hpp"
+#include "UtilityFunctions.hpp"
 #include <iostream>
 #include <random>
 #include <fstream>
@@ -17,42 +19,33 @@ const double T_0 = 0;
 const double X_T_0 = 100;
 
 /* Pure jump process parameters */
-double INTENSITY_LAMBDA = 0.1;
-const double JUMP_SIZE_MU = 0;
-const double JUMP_SIZE_SIGMA = 25;
-const double X_0 = 0.0;
+const double scale = 1.0;
+const double proportionalityIntensity = 0.03;
+const double fixedIntensity = 2;
+
+void writeEulerMaruyamaPoissonProcess(double,double);
+void writeEulerMaruyamaProportionalJumpProcess(double, double);
 
 int main()
 {
-    PureJumpProcess jumpProcess
-    (
-        [](double,double){return INTENSITY_LAMBDA;},
-         std::move(std::make_unique<Normal>(JUMP_SIZE_MU,JUMP_SIZE_SIGMA))
-    );
+    std::cout << "Proportional intensity jump process (EM).\n";
+    writeEulerMaruyamaProportionalJumpProcess(proportionalityIntensity, 1);
+    std::cout << "Fixed intensity (Poisson) jump process (EM).\n";
+    writeEulerMaruyamaPoissonProcess(fixedIntensity,1);
+}
 
-    std::string filename;
-    std::cout << "\nStore results in file: ";
-    std::cin >> filename;
+void writeEulerMaruyamaPoissonProcess(double intensity, double scale)
+{
+    PoissonProcess process(intensity, scale);
+    StochasticProcess& processRef = process;
+    Utility::writeEulerMaruyamaSim(processRef,T_0, X_T_0, resolution, noSteps, noSims, randomSeed);
+}
 
-    std::ofstream file("results/ou/"+filename + ".csv");
-
-    file << "FIXED JUMP INTENSITY = " << INTENSITY_LAMBDA << ", MEAN JUMP SIZE = " << JUMP_SIZE_MU << ", STDEV OF JUMP SIZE = " << JUMP_SIZE_SIGMA << ", T_0 =" << T_0 << ", X_T_0 = " << X_T_0 << ", DELTA T = " << resolution << "\n";
-    file << "RANDOM SEEDS: " + std::to_string(randomSeed) + " + i\n";
-    file << "NUMBER OF SIMS = " + std::to_string(noSims) + ", NUMBER OF STEPS PER SIM = " + std::to_string(noSteps) + "\n";
-
-    for (int i = 0; i < noSims; i++)
-    {
-        EulerMaruyama jumpSolver(jumpProcess,resolution,randomSeed + i);
-        std::vector<double> results = jumpSolver.simulatePathHistory(T_0, X_T_0, noSteps);
-        for (double num : results)
-        {
-            file << num << ", ";
-        }
-        file << "\n";
-    }
-
-
-
+void writeEulerMaruyamaProportionalJumpProcess(double intensityGradient, double scale)
+{
+    ProportionalPureJumpProcess process(intensityGradient, scale);
+    StochasticProcess& processRef = process;
+    Utility::writeEulerMaruyamaSim(processRef,T_0, X_T_0, resolution, noSteps, noSims, randomSeed);
 
 }
 
@@ -63,7 +56,7 @@ double predictJumpEV(StochasticProcess& Jumpref)
     for (int i = 0; i < noSims; i++)
     {
         EulerMaruyama JumpSolver(Jumpref,resolution,randomSeed + i);
-        terminalValues[i] = JumpSolver.simulatePath(0,X_0,noSteps);
+        terminalValues[i] = JumpSolver.simulatePath(T_0, X_T_0, noSteps);
     }
 
     double sum = 0;

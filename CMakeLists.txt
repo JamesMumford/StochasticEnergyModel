@@ -16,6 +16,7 @@ add_executable(stochastic_model
     src/StandardDistributions.cpp
     src/Solver.cpp
     src/PureJumpProcess.cpp
+    src/UtilityFunctions.cpp
 )
 
 add_executable(gbm_model
@@ -27,6 +28,7 @@ add_executable(gbm_model
     src/StochasticProcess.cpp
     src/StandardDistributions.cpp
     src/Solver.cpp
+    src/UtilityFunctions.cpp
 )
 
 add_executable(ou_model
@@ -38,6 +40,7 @@ add_executable(ou_model
     src/StochasticProcess.cpp
     src/StandardDistributions.cpp
     src/Solver.cpp
+    src/UtilityFunctions.cpp
 )
 
 add_executable(jump_model
@@ -49,6 +52,9 @@ add_executable(jump_model
     src/StochasticProcess.cpp
     src/StandardDistributions.cpp
     src/Solver.cpp
+    src/UtilityFunctions.cpp
+    src/PureJumpProcess.cpp
+    src/StandardProcesses.cpp
 )
 
 add_executable(inference
@@ -62,6 +68,7 @@ add_executable(inference
     src/StochasticProcess.cpp
     src/StandardDistributions.cpp
     src/Solver.cpp
+    src/UtilityFunctions.cpp
 )
 
 target_include_directories(stochastic_model PRIVATE include)
