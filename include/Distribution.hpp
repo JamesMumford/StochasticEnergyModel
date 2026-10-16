@@ -8,5 +8,8 @@ class Distribution
         virtual ~Distribution() = default;
         virtual double sample(std::mt19937& generator) = 0;
         virtual double sample() = 0;
-    private:
+        virtual void init(std::vector<double> parameters) = 0;
+        virtual std::vector<double> getParameters();
+    protected:
+        std::vector<double> parameters_;
 };

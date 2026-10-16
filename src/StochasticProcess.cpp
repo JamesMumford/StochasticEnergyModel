@@ -1,7 +1,7 @@
 #include "StochasticProcess.hpp"
 #include <iostream>
 
-StochasticProcess::StochasticProcess(BivariateFunction driftFunction, BivariateFunction diffusionFunction, BivariateFunction jumpIntensity, std::unique_ptr<Distribution> jumpSizeDistribution)
+StochasticProcess::StochasticProcess(BivariateFunction driftFunction, BivariateFunction diffusionFunction, BivariateFunction jumpIntensity, std::unique_ptr<DynamicDistribution> jumpSizeDistribution)
 : driftFunction_(driftFunction), diffusionFunction_(diffusionFunction), jumpIntensity_(jumpIntensity), jumpSizeDistribution_(std::move(jumpSizeDistribution)){};
 
 
@@ -24,7 +24,7 @@ double StochasticProcess::getJump(double t_prev, double t_new, double x_t_prev, 
 
     for (int i = 0; i < jumpCount; i++)
     {
-        jumpSum += (*jumpSizeDistribution_).sample(generator);
+        jumpSum += (*jumpSizeDistribution_).sample(t_prev, x_t_prev, generator);
     }
     return jumpSum;
 }
@@ -42,11 +42,6 @@ std::function<double(double,double)> StochasticProcess::getDiffusionFunction()
 std::function<double(double,double)> StochasticProcess::getJumpIntensityFunction()
 {
     return jumpIntensity_;
-}
-
-Distribution& StochasticProcess::getJumpSizeDistribution()
-{
-    return *jumpSizeDistribution_;
 }
 
 std::string getStringParameters()

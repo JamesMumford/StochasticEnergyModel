@@ -5,7 +5,7 @@ OrnsteinUhlenbeck::OrnsteinUhlenbeck(double theta,double mu,double sigma) : Stoc
     [theta,mu](double t, double x_t){return theta * (mu - x_t);},
     [sigma](double,double){return sigma;},
     [](double,double){return 0;},
-    std::make_unique<DiracDelta>(0)
+    std::make_unique<DynamicDistribution>(std::make_unique<DiracDelta>(0),[](double,double){return std::vector<double>{0,0};})
 )
 {
     theta_ = theta;
