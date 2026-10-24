@@ -20,7 +20,7 @@ int main()
     std::string line;
     std::getline(input,line);
 
-    output << "Date, Timestamp, Price\n";
+    output << "Date,Timestamp,Price\n";
 
     int rowsRead = 0;
     int rowsWritten = 0;
