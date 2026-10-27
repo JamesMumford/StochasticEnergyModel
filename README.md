@@ -11,6 +11,19 @@ The goal is eventually to consider several possible pricing models, use historic
 test each of the models out of sample with those parameters to see if it behaves well. This could then be used, for example, in a Monte Carlo estimate 
 for pricing an option on the underlying.
 
+The first experiment with real data uses the NESO's Day Ahead Power Exchanges Prices (Nord Pool) dataset which is freely available (https://www.neso.energy/data-portal/day-ahead-power-exchange-prices-nordpool). I first wanted to see how the energy price process was correlated with itself at different time offsets to identify any daily / weekly patterns, so used pandas and matplotlib to construct the below graphs of autocorrelation on energy prices. Note that the dataset gives prices once per hour, so each timestep is one hour.
+
+<img width="2000" height="1000" alt="NESOautocorrelationUpTo25" src="https://github.com/user-attachments/assets/4512d387-cc77-435f-b642-b58d63aa9585" />
+<img width="2000" height="1000" alt="NESOautocorrelationUpTo300" src="https://github.com/user-attachments/assets/b8d20d4f-738b-421a-8be0-41d7d64939e8" />
+<img width="2000" height="1000" alt="NESOautocorrelationUpTo75" src="https://github.com/user-attachments/assets/2209f4fc-413c-46c0-965f-8f5bfbfeda1c" />
+
+We notice straight away there is a peak at multiples of 24 hours, indicating that the specific hour of the day may have some useful predictive power over the price of energy. So as a first basic model, I ran some more python analysis to compute average energy price for each hour of the day, on each weekday. I did consider just doing it for each hour of the day in aggregate, but noticed that the power price patterns for different days of the week was quite different. See an example of this disparity below:
+
+<img width="2000" height="1000" alt="NESOmeanPriceByTimeSunday" src="https://github.com/user-attachments/assets/b8b5ac22-16a1-4434-9ccc-6375f3670094" />
+
+<img width="2000" height="1000" alt="NESOmeanPriceByTimeThursday" src="https://github.com/user-attachments/assets/41469369-54bd-4673-a67f-7ac9202eafe1" />
+
+
 ## Current Features
 - Brownian motion, geometric Brownian motion and Ornstein-Uhlenbeck process simulation
 - Pure jump process simulation
