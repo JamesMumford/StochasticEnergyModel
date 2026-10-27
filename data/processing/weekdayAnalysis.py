@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from timeOfDayAnalysis import plot_mean_price_by_time
 
-filename = "data/processed/NESO_price_data_24.10.26_13:00[PROCESSED].csv"
+filename = "data/processed/NESO_price_data_24.10.26_13:00[TRAINING].csv"
 
 def plot_mean_price_by_weekday(filename):
     data["Date"] = pd.to_datetime(data["Date"])
@@ -20,7 +20,7 @@ def plot_mean_price_by_weekday(filename):
     plt.xlabel("Weekday")
     plt.ylabel("Price (£/MWhr)")
     plt.grid(alpha=0.5)
-    plt.savefig("data/processed/NESOmeanPriceByWeekday")
+    plt.savefig("data/graphs/NESOmeanPriceByWeekday")
 
 def plot_hourly_prices_by_weekday(data):
     weekday_specific_series = []
@@ -39,7 +39,10 @@ def plot_hourly_prices_by_weekday(data):
         plt.ylabel("Mean price (£/MWhr) on a" + day)
         plt.title("NESO mean energy price by time of day, on a " + day)
         plt.grid(alpha=0.5)
-        plt.savefig("data/processed/NESOmeanPriceByTime" + day + ".png")
+        #plt.savefig("data/graphs/NESOmeanPriceByTime" + day + ".png")
+
+        day_mean_data = pd.DataFrame(weekday_specific_hourly_averages,columns=["Weekday " + str(i) + " hourly averages"])
+        day_mean_data.to_csv("data/numericalAnalysis/Weekday" + str(i) + "HourlyAverages",index=False)
 
 
 data = pd.read_csv(filename)

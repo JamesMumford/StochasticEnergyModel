@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from statsmodels.tsa.stattools import acf
 
-filepath = "data/processed/NESO_price_data_24.10.26_13:00[PROCESSED].csv"
+filepath = "data/processed/NESO_price_data_24.10.26_13:00[TRAINING].csv"
 
 # time of day analsis yielded these mean prices for each hour 00:00, 01:00, etc
 hourly_means = [99.69479312197744,95.87430413756044,91.18840408382592,90.47703922622246,95.22422890918861,110.04663621708758,123.2779957012359,126.70675980655561,124.72581407845246,118.19993551853841,111.84484148307362,107.50365932294466,104.36670069854917,103.28008060182697,106.37960236432026,118.61871574422354,142.64195056421278,164.3443471252015,159.04448683503495,144.16853842020421,129.87918323482,116.49133799032778,109.15211600429645,102.55490059108007]
@@ -11,7 +11,7 @@ hourly_means = [99.69479312197744,95.87430413756044,91.18840408382592,90.4770392
 def plot_autocorrelation(filepath):
     data = pd.read_csv(filepath)
     time_series = data["Price"]
-    autocorrelations = acf(time_series,nlags=75,fft=False)
+    autocorrelations = acf(time_series,nlags=30000,fft=False)
 
     plt.figure(figsize=(20,10))
     plt.scatter(range(len(autocorrelations)),autocorrelations)
@@ -19,7 +19,7 @@ def plot_autocorrelation(filepath):
     plt.ylabel("autocorrelation")
     plt.title("NESO energy price time series autocorrelation")
     plt.grid(alpha=0.5)
-    plt.savefig("data/processed/NESOautocorrelationUpTo75")
+    plt.savefig("data/graphs/NESOautocorrelationUpTo30000")
 
 def plot_time_adjusted_autocorrelations(filepath):
     data = pd.read_csv(filepath)
@@ -35,6 +35,6 @@ def plot_time_adjusted_autocorrelations(filepath):
     plt.ylabel("autocorrelation of time-adjusted prices")
     plt.title("NESO energy price time series autocorrelation, adjusted for time of day")
     plt.grid(alpha=0.5)
-    plt.savefig("data/processed/NESOtimeAdjustedAutocorrelationUpTo3000")
+    plt.savefig("data/graphs/NESOtimeAdjustedAutocorrelationUpTo3000")
 
-plot_time_adjusted_autocorrelations(filepath)
+plot_autocorrelation(filepath)

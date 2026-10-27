@@ -16,9 +16,9 @@ def plot_mean_price_by_time(data):
     plt.ylabel("Mean price (£/MWhr)")
     plt.title("NESO mean energy price by time of day")
     plt.grid(alpha=0.5)
-    plt.savefig("data/processed/NESOmeanPriceByTime.png")
+    plt.savefig("data/graphs/NESOmeanPriceByTime.png")
 
-plot_mean_price_by_time(pd.read_csv("data/processed/NESO_price_data_24.10.26_13:00[PROCESSED].csv"))
+plot_mean_price_by_time(pd.read_csv("data/processed/NESO_price_data_24.10.26_13:00[TRAINING].csv"))
 
 
 
