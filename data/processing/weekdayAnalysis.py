@@ -42,7 +42,7 @@ def plot_hourly_prices_by_weekday(data):
         #plt.savefig("data/graphs/NESOmeanPriceByTime" + day + ".png")
 
         day_mean_data = pd.DataFrame(weekday_specific_hourly_averages,columns=["Weekday " + str(i) + " hourly averages"])
-        day_mean_data.to_csv("data/numericalAnalysis/Weekday" + str(i) + "HourlyAverages",index=False)
+        day_mean_data.to_csv("data/numericalAnalysis/Weekday" + str(i) + "HourlyAverages.csv",index=False)
 
 
 data = pd.read_csv(filename)

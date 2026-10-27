@@ -12,7 +12,7 @@ double Solver::simulatePath(double t_0, double x_t_0, const unsigned int no_step
     double x_T = x_t_0;
     for (int i = 0; i < no_steps; i++)
     {
-        x_T = step(t_0 + i * dt_, x_t_0);
+        x_T = step(t_0 + i * dt_, x_T);
     }
     return x_T;
 }

@@ -19,42 +19,35 @@ const double SIGMA = 10.0;
 const double T_0 = 0.0;
 const double X_T_0 = 100;
 
-double predictOUEV(StochasticProcess&);
+double predictOUEV(OrnsteinUhlenbeck&);
+void comparePredictedToAnalyticOUEV(OrnsteinUhlenbeck&);
+
 
 int main()
 {
     OrnsteinUhlenbeck OUprocess(THETA,MU,SIGMA);
-    StochasticProcess& OUref = OUprocess;
+    OrnsteinUhlenbeck& OUref = OUprocess;
 
-    Utility::writeEulerMaruyamaSim(OUref,T_0,X_T_0,resolution,noSteps,noSims,randomSeed);
+    comparePredictedToAnalyticOUEV(OUref);
+
+    /* Utility::writeEulerMaruyamaSim(OUref,T_0,X_T_0,resolution,noSteps,noSims,randomSeed);*/
 }
 
-void comparePredictedToAnalyticOUEV(StochasticProcess& OUref)
+void comparePredictedToAnalyticOUEV(OrnsteinUhlenbeck& OUref)
 {
-    std::string filename;
-    std::cout << "\nRead data from file: ";
-    std::cin >> filename;
+    double estimatedEV = predictOUEV(OUref);
+    double trueEV = OUref.AnalyticEV(noSteps,X_T_0,resolution);
+    double percentageError = 100 * fabs(trueEV - estimatedEV) / (double)(trueEV);
 
-    std::ifstream file("results/ou/"+filename+".csv");
-
-    if (!file.is_open())
-    {
-        std::cout << "Failed to open file!";
-        return;
-    }
-
-    std::string line;
-
-    for (int i = 0; i < 6; i++)
-    {
-        std::getline(file,line);
-    }
+    std::cout << " Ornstein Uhlenbeck process\n Analytic EV: " << trueEV << "\n Estimated EV: " << estimatedEV;
+    std::cout << "\n Error: " << std::to_string(percentageError) << "%\n";
+    std::cout << "\n With parameters theta = " << THETA << "\n                 mu = " << MU << "\n                 sigma = " << SIGMA << "\n";
+    std::cout << "                 paths = " << noSims << "\n                 timesteps = " << noSteps << "\n";
 }
 
-double predictOUEV(StochasticProcess& OUref)
+double predictOUEV(OrnsteinUhlenbeck& OUref)
 {
     std::vector<double> terminalValues(noSims);
-
     for (int i = 0; i < noSims; i++)
     {
         EulerMaruyama OUsolver(OUref,resolution,randomSeed + i);
