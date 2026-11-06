@@ -49,10 +49,10 @@ We notice straight away there is a peak at multiples of 24 hours, indicating tha
     - Test if adding a multi-regime switching jump component to the composite model gives better results on test data.
     - Test if adding a jump component with a size distribution that induces mean reverting behaviour gives better results on test data.
     - Test if using a jump intensity which is a function of state (or jump history) gives better results on data, and find which basic function is best.
-- Add in historical energy production forecast data from solar, wind, nuclear and gas, and historical energy deman forecasts.
+- Add in historical energy production forecast data from solar, wind, nuclear and gas, and historical energy demand forecasts.
     - Since the marginal cost of energy production is usually a significant driver of electricity prices, we want to find a way of determining which power production types in the merit-order ranking are likely to be used in a given hour, so we can base our spot price prediction on the most expensive marginal production cost of these production types.
     - For simplicity, we will likely just use NESO's own solar, wind, nuclear energy production forecasts, rather than developing our own methods to predict future production.
-    - Using the forecasted energy demand, we can then predict which of the energy production types will likely be in use in a given hour, to compute the amrginal cost of energy production.
+    - Using the forecasted energy demand, we can then predict which of the energy production types will likely be in use in a given hour, to compute the marginal cost of energy production.
     - We can then implement a regime-switching model based on this marginal energy production cost to try and capture NESO energy spot prices more accurately.
     - We will test this model on the NESO energy spot prices test split, to determine if it adds any predictive value.
 
