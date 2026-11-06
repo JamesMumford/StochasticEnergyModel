@@ -25,18 +25,34 @@ We notice straight away there is a peak at multiples of 24 hours, indicating tha
 
 
 ## Current Features
-- Brownian motion, geometric Brownian motion and Ornstein-Uhlenbeck process simulation
-- Pure jump process simulation
-    - Jump intensity is modelled as a function of time and current state (for example, higher prices may lead to an increased chance of jumps occurring in a given time interval)
-- Euler-Maruyama time-stepping scheme used to discretise the SDEs for a numerical solution
-    - Modular design allows later use of different numerical schemes
+- Brownian motion, geometric Brownian motion, Ornstein-Uhlenbeck process path simulation, including automatic recording of either full path histories or just path terminal values, to a csv file.
+- Option class, which has functionality to generate a Monte Carlo estimate of the European call/put expected value on an underlying jump process or SDE, assuming a particular risk free rate of return in the market.
+    - Includes functionality for finding a 100- $ \alpha $` confidence interval on the value of the European calls/puts.
+- Arbitrary Lévy process path simulation
+    - Extended supported stochastic processes to include non-Lévy processes which consist of an SDE component summed with a jump process component.
+    - Jump processes have jump intensities which are themselves functions of time and the state of the process (for example, real electricity markets often observe shocks being followed by increased shock intensities shortly afterward, so this is a phenomenon we could now incorporate using this model).
+    - Jump processes have dynamic jump size distributions, dependent on time and the state of the process.
+- Solver class acts as interface for numerically simulating paths of stochastic processes.
+    - All simulations currently use Euler-Maruyama child class (which implements the Euler-Maruyama method) as the method of path computation.
+- Imported hourly NESO electricity spot price data (dates back to 20/9/2021).
+    - Cleaned NESO time series data by making data_cleaning C++ executable.
+    - Used pandas to divide NESO data into a testing and a training split.
+    - Used pandas, NumPy to conduct autocorrelation analysis of NESO data, identifying daily and weekly trends in prices.
+    - Constructed composite model consisting of deterministic component (a function of weekday and time of day) summed with an Ornstein-Uhlenbeck process, to try and find a good model to represent the NESO data.
+    - Inferred what the Ornstein-Uhlenbeck parameters would be from the training split of the NESO data.
 
 ## Soon To Be Released Features
-- General Lévy process simulation (processes which consist of an SDE summed with a pure jump component)
-    - Jump size distribution modelled as a function of current state and time (for example, low prices may be more likely to experience positive shocks, while high prices
-      might be more likely to experience negative ones)
-    - Mean reversion of continuous component and mean reversion of jump component to be modelled separately (jumps often experience very sharp mean reversion, so it may be
-      beneficial if they are not subject to the same reversion rate as continuous deviations from the baseline)
-- Introduce some independent market variables (seasonality, weather conditions, economic conditions etc) which also affect the process' drift, diffusion, jump intensity and
-  jump size distribution
+- Further NESO data analysis.
+    - Examine the goodness of fit of our composite model (as described above) on the testing split of the NESO data.
+    - Investigate longer term energy price trends (e.g. monthly, annual) and see if increased complexity of the deterministic component gives better results on test split.
+    - Test if adding a pure jump process into our composite model gives better results on test split of NESO data.
+    - Test if adding a multi-regime switching jump component to the composite model gives better results on test data.
+    - Test if adding a jump component with a size distribution that induces mean reverting behaviour gives better results on test data.
+    - Test if using a jump intensity which is a function of state (or jump history) gives better results on data, and find which basic function is best.
+- Add in historical energy production forecast data from solar, wind, nuclear and gas, and historical energy deman forecasts.
+    - Since the marginal cost of energy production is usually a significant driver of electricity prices, we want to find a way of determining which power production types in the merit-order ranking are likely to be used in a given hour, so we can base our spot price prediction on the most expensive marginal production cost of these production types.
+    - For simplicity, we will likely just use NESO's own solar, wind, nuclear energy production forecasts, rather than developing our own methods to predict future production.
+    - Using the forecasted energy demand, we can then predict which of the energy production types will likely be in use in a given hour, to compute the amrginal cost of energy production.
+    - We can then implement a regime-switching model based on this marginal energy production cost to try and capture NESO energy spot prices more accurately.
+    - We will test this model on the NESO energy spot prices test split, to determine if it adds any predictive value.
 
